@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Meal plan{% endblock %}
+{% block content %}
+<section class="page-heading plan-heading"><div><p class="eyebrow">YOUR TABLE, SORTED</p><h1>The meal plan.</h1><p class="page-subtitle">{{ plan.start_date }} <span class="date-divider">→</span> {{ plan.end_date }}</p></div><div class="plan-tools"><button class="button button-outline" type="button" id="copy-plan-link" data-url="{{ url_for('plans.view_plan', token=plan.token, _external=True) }}">Copy short link</button><a class="button button-lime" href="{{ url_for('plans.plan_shopping_list', token=plan.token) }}">Shopping list <span>↗</span></a>{% if not editable %}<a class="icon-button" href="{{ url_for('plans.edit_plan', token=plan.token) }}" aria-label="Edit meal plan" title="Edit meal plan">✎</a>{% endif %}</div></section>
+{% if not recipes %}<p class="form-hint">Add recipes before filling in this plan.</p>{% endif %}
+{% if editable %}
+<form method="post" class="calendar-form">
+    <div class="calendar-grid">{% for day in days %}<section class="calendar-day"><div class="day-heading"><span class="day-name">{{ day.date.strftime('%A') }}</span><span class="day-date">{{ day.date.strftime('%b %d') }}</span></div><div class="day-recipe-list" id="recipes-{{ day.date.isoformat() }}">
+        {% for selected in day.recipes %}<div class="day-recipe-row"><select name="recipes_{{ day.date.isoformat() }}" aria-label="Recipe for {{ day.date }}"><option value="">Choose a recipe</option>{% for recipe in recipes %}<option value="{{ recipe.id }}" {% if recipe.id == selected.id %}selected{% endif %}>{{ recipe.name }}</option>{% endfor %}</select><button class="remove-row" type="button" aria-label="Remove recipe">×</button></div>{% endfor %}
+        {% if not day.recipes %}<div class="day-recipe-row"><select name="recipes_{{ day.date.isoformat() }}" aria-label="Recipe for {{ day.date }}"><option value="">Choose a recipe</option>{% for recipe in recipes %}<option value="{{ recipe.id }}">{{ recipe.name }}</option>{% endfor %}</select><button class="remove-row" type="button" aria-label="Remove recipe">×</button></div>{% endif %}
+        </div><button class="add-day-recipe" type="button" data-list="recipes-{{ day.date.isoformat() }}" data-template="recipe-template-{{ day.date.isoformat() }}">+ Add another</button><template id="recipe-template-{{ day.date.isoformat() }}"><div class="day-recipe-row"><select name="recipes_{{ day.date.isoformat() }}" aria-label="Recipe for {{ day.date }}"><option value="">Choose a recipe</option>{% for recipe in recipes %}<option value="{{ recipe.id }}">{{ recipe.name }}</option>{% endfor %}</select><button class="remove-row" type="button" aria-label="Remove recipe">×</button></div></template></section>{% endfor %}</div>
+    <div class="form-actions"><span class="form-hint">Changes are saved when you update the plan.</span><button class="button button-pink" type="submit">Save meal plan <span>↗</span></button></div>
+</form>
+<form class="delete-form" method="post" action="{{ url_for('plans.delete_plan', token=plan.token) }}" data-confirm="Delete this meal plan? This cannot be undone."><button class="button button-danger" type="submit">Delete meal plan</button></form>
+{% else %}
+<section class="calendar-grid calendar-readonly">{% for day in days %}<article class="calendar-day"><div class="day-heading"><span class="day-name">{{ day.date.strftime('%A') }}</span><span class="day-date">{{ day.date.strftime('%b %d') }}</span></div>{% if day.recipes %}<ul class="readonly-recipes">{% for selected in day.recipes %}<li><a href="{{ url_for('main.view_recipe', recipe_id=selected.id) }}">{{ selected.name }}</a></li>{% endfor %}</ul>{% else %}<p class="empty-day">No meals planned</p>{% endif %}</article>{% endfor %}</section>
+{% endif %}
+<p class="share-note">SHORT LINK <a href="{{ url_for('plans.view_plan', token=plan.token) }}">{{ request.host_url.rstrip('/') }}{{ url_for('plans.view_plan', token=plan.token) }}</a></p>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/app.js') }}" defer></script>{% endblock %}

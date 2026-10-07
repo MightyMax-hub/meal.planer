@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Recipes{% endblock %}
+{% block content %}
+<section class="page-heading"><div><p class="eyebrow">THE KEEPERS</p><h1>Your recipes<span class="heading-count">{{ recipes|length }}</span></h1><p class="page-subtitle">The dishes worth making again.</p></div><a class="button button-lime" href="{{ url_for('main.new_recipe') }}"><span>+</span> Add recipe</a></section>
+{% if recipes %}<section class="recipe-grid">{% for recipe in recipes %}<a class="recipe-tile" href="{{ url_for('main.view_recipe', recipe_id=recipe.id) }}"><span class="tile-kicker">RECIPE / {{ "%02d"|format(loop.index) }}</span><span class="tile-arrow">↗</span><h2>{{ recipe.name }}</h2><p>{{ recipe.ingredient_count }} ingredients{% if recipe.notes %} · Notes included{% endif %}</p></a>{% endfor %}</section>
+{% else %}<section class="empty-state"><span class="empty-symbol">✳</span><h2>A good recipe deserves a home.</h2><p>Add one to start your collection.</p><a class="button button-lime" href="{{ url_for('main.new_recipe') }}">Add your first recipe</a></section>{% endif %}
+{% endblock %}

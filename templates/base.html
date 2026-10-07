@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#171416">
+    <title>{% block title %}Supper Club{% endblock %} · Supper Club</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="site-header">
+        <a class="wordmark" href="{{ url_for('main.dashboard') }}"><span class="wordmark-mark">S</span><span>SUPPER<br>CLUB</span></a>
+        <nav aria-label="Main navigation">
+            <a href="{{ url_for('main.dashboard') }}">Overview</a>
+            <a href="{{ url_for('main.recipe_list') }}">Recipes</a>
+            <a href="{{ url_for('plans.new_plan') }}">Meal plan</a>
+            <a href="{{ url_for('plans.shopping_list') }}">Shopping list</a>
+        </nav>
+        <a class="header-add" href="{{ url_for('main.new_recipe') }}" aria-label="Add recipe" title="Add recipe">+</a>
+    </header>
+    <main>{% block content %}{% endblock %}</main>
+    <footer class="site-footer"><span>GOOD FOOD, LESS GUESSWORK.</span><span>Made for the week ahead.</span></footer>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Plan your week{% endblock %}
+{% block content %}
+<section class="page-heading compact-heading"><div><p class="eyebrow">MAKE ROOM FOR GOOD FOOD</p><h1>Plan your days.</h1><p class="page-subtitle">Choose a date range, then fill each day with recipes.</p></div></section>
+{% if recipe_count %}<form class="editor-form plan-start-form" method="post"><div class="date-fields"><label><span class="field-label">From</span><input type="date" name="start_date" value="{{ request.form.get('start_date', today) }}" required></label><label><span class="field-label">Through</span><input type="date" name="end_date" value="{{ request.form.get('end_date', tomorrow) }}" required></label></div>{% if error %}<p class="form-error">{{ error }}</p>{% endif %}<p class="form-hint">Plans can cover up to 60 days. You can share your finished plan with one short link.</p><button class="button button-pink" type="submit">Open the calendar <span>↗</span></button></form>
+{% else %}<section class="empty-state"><span class="empty-symbol">✳</span><h2>First, add a few recipes.</h2><p>Then they’ll be ready to drop into your calendar.</p><a class="button button-lime" href="{{ url_for('main.new_recipe') }}">Add a recipe</a></section>{% endif %}
+<section class="existing-plans"><div class="section-heading"><div><p class="eyebrow">YOUR CALENDAR</p><h2>Existing meal plans</h2></div><span class="detail-count">{{ existing_plans|length }} plans</span></div>
+	{% for plan in existing_plans %}<a class="existing-plan-row" href="{{ url_for('plans.view_plan', token=plan.token) }}"><span>{{ plan.start_date }} <span class="date-divider">→</span> {{ plan.end_date }}</span><span class="existing-plan-count">{{ plan.meal_count }} meals</span><span class="row-arrow">↗</span></a>{% else %}<p class="empty-note">Your saved meal plans will appear here.</p>{% endfor %}
+</section>
+{% endblock %}

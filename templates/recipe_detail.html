@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}{{ recipe.name }}{% endblock %}
+{% block content %}
+<section class="page-heading compact-heading"><div><p class="eyebrow">IN YOUR COLLECTION</p><h1>{{ recipe.name }}</h1></div><div class="detail-tools"><a class="back-link" href="{{ url_for('main.recipe_list') }}">← All recipes</a><a class="icon-button" href="{{ url_for('main.edit_recipe', recipe_id=recipe.id) }}" aria-label="Edit recipe" title="Edit recipe">✎</a></div></section>
+{% if recipe.image_filename %}<img class="recipe-detail-image" src="{{ url_for('main.recipe_image', recipe_id=recipe.id) }}" alt="{{ recipe.name }}">{% endif %}
+<article class="recipe-detail">
+    <section class="detail-section"><div class="section-heading"><div><p class="eyebrow">WHAT GOES IN</p><h2>Ingredients</h2></div><span class="detail-count">{{ ingredients|length }} items</span></div>
+        {% if ingredients %}<ul class="detail-ingredients">{% for item in ingredients %}<li><span>{{ item.name }}</span><strong>{{ item.amount }} {{ item.unit }}</strong></li>{% endfor %}</ul>{% else %}<p class="form-hint">No ingredients listed.</p>{% endif %}
+    </section>
+    {% if recipe.notes %}<section class="detail-section notes-section"><p class="eyebrow">A FEW NOTES</p><p class="recipe-notes">{{ recipe.notes }}</p></section>{% endif %}
+</article>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/app.js') }}" defer></script>{% endblock %}

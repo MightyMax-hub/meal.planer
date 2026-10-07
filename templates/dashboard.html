@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Your kitchen{% endblock %}
+{% block content %}
+<section class="dashboard-intro">
+    <div><p class="eyebrow">YOUR KITCHEN, IN GOOD ORDER</p><h1>What sounds<br><em>good today?</em></h1></div>
+    <p class="intro-copy">Keep the recipes you love close, make a plan that works, and let the shopping list take care of itself.</p>
+</section>
+<section class="dashboard-grid">
+    <article class="feature-card">
+        <div class="feature-photo" role="img" aria-label="A fresh table of seasonal food"></div>
+        <div class="feature-copy">
+            <div class="feature-heading"><p class="eyebrow">A LITTLE INSPIRATION</p><span class="lime-dot"></span></div>
+            {% if featured_recipe %}
+                <h2>{{ featured_recipe.name }}</h2><p>Your recipe of the day. Give it a go?</p>
+                <a class="text-link" href="{{ url_for('main.view_recipe', recipe_id=featured_recipe.id) }}">Open recipe <span>↗</span></a>
+            {% else %}
+                <h2>Something delicious starts here.</h2><p>Add your first recipe and it could be today's pick.</p>
+                <a class="text-link" href="{{ url_for('main.new_recipe') }}">Add a recipe <span>↗</span></a>
+            {% endif %}
+            <a class="reroll" href="{{ url_for('main.dashboard', reroll=1) }}" title="Pick another recipe" aria-label="Pick another recipe">↻</a>
+        </div>
+    </article>
+    <div class="action-stack">
+        <a class="action-card plan-card" href="{{ url_for('plans.new_plan') }}">
+            <span class="action-index">01 / PLAN</span><span class="action-arrow">↗</span>
+            <strong>Map out<br>the week.</strong><span class="action-note">Build a plan, day by day</span>
+        </a>
+        <a class="action-card shop-card" href="{{ url_for('plans.shopping_list') }}">
+            <span class="action-index">02 / SHOP</span><span class="action-arrow">↗</span>
+            <strong>Make the<br>list.</strong><span class="action-note">Pick recipes, get ingredients</span>
+        </a>
+    </div>
+</section>
+<section class="dashboard-bottom">
+    <div class="collection-count"><span class="eyebrow">YOUR COLLECTION</span><strong>{{ "%02d"|format(recipe_count) }}</strong><span>recipes saved</span><a class="text-link" href="{{ url_for('main.recipe_list') }}">Browse recipes <span>↗</span></a></div>
+    <div class="upcoming-list"><div class="section-heading"><div><p class="eyebrow">COMING UP</p><h2>On the calendar</h2></div><a class="text-link" href="{{ url_for('plans.new_plan') }}">New plan <span>↗</span></a></div>
+        {% for plan in upcoming %}<a class="upcoming-row" href="{{ url_for('plans.view_plan', token=plan.token) }}"><span>{{ plan.start_date }} — {{ plan.end_date }}</span><span>{{ plan.meal_count }} meals</span><span class="row-arrow">↗</span></a>{% else %}<p class="empty-note">Your next plan will show up here.</p>{% endfor %}
+    </div>
+</section>
+{% endblock %}
